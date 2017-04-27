@@ -1,0 +1,70 @@
+<md-toolbar class="toolbar" color="primary">
+    <md-icon class="toolbar-material-icons">menu</md-icon>
+    <md-icon class="toolbar-material-icons person">person_pin</md-icon>
+    <ul class="toolbar-login-status">
+        <li>Ignasius Indra Kusuma Wijaya</li>
+        <li>SE - JP</li>
+    </ul>
+    <span class="toolbar-spacer"></span>
+    <md-icon class="toolbar-material-icons">settings</md-icon>
+    <md-icon class="toolbar-material-icons">power_settings_new</md-icon>
+</md-toolbar>
+
+<div class="left-display">
+    <button md-mini-fab color="accent" class="add-emp" (click)="onSelectEmployee(0)"><md-icon>add</md-icon></button>
+    <div class="searchbar">
+        <md-icon class="searchbar-material-icons">search</md-icon>
+        <input #searchb class="searchbar-input" placeholder="Search" size="15" (keyup)="searchName(searchb.value)">
+        <md-icon mdTooltip="Sort employees by last name" class="searchbar-material-icons sort" (click)="sortEmployees()">sort</md-icon>
+        <md-icon mdTooltip="Filter employees" class="searchbar-material-icons filter" (click)="openDialog()">filter_list</md-icon>
+        <span class="seachbar-counter">{{employeesLength}}</span>
+    </div>
+    <div class="left-display-bottom">
+        <md-nav-list class="emp-list">
+            <span *ngFor="let emp of employees">
+                <md-list-item
+                    [ngClass]="{'emp-selected':selectedList === emp.id}"
+                    (click)="onSelectEmployee(emp)">
+                    <img md-list-avatar src="../media/avatar.jpg" alt="User">
+                    <p md-line>
+                        <span><b>{{emp.firstname}} {{emp.lastname}}</b></span>
+                        <span>| {{emp.hireddate | date:'dd MMMM yyyy'}}</span>
+                    </p>
+                    <p md-line>{{emp.grade}},{{' '+emp.division}}</p>
+                    <p md-line>{{emp.location}},{{' '+emp.phone}}</p>
+                    <md-icon class="left-display-material-icons">playlist_play</md-icon>
+                </md-list-item>
+                <md-divider></md-divider>
+            </span>
+        </md-nav-list>
+    </div>
+</div>
+<div class="right-display">
+    <md-tab-group>
+        <md-tab>
+            <ng-template md-tab-label><md-icon class="right-display-material-icons">person</md-icon></ng-template>
+            <employee-detail
+                [emp]="selectedEmployee"
+                (save)="onSaveData($event)"
+                (updt)="onUpdateData($event)"
+                (del)="onDeleteData($event)"
+                (status)="onStatusChange()">
+            </employee-detail>
+        </md-tab>
+        <md-tab disabled="true">
+            <ng-template md-tab-label><md-icon class="right-display-material-icons">history</md-icon></ng-template>
+        </md-tab>
+        <md-tab disabled="true">
+            <ng-template md-tab-label><md-icon class="right-display-material-icons">layers</md-icon></ng-template>
+        </md-tab>
+        <md-tab disabled="true">
+            <ng-template md-tab-label><md-icon class="right-display-material-icons">wc</md-icon></ng-template>
+        </md-tab>
+        <md-tab disabled="true">
+            <ng-template md-tab-label><md-icon class="right-display-material-icons">home</md-icon></ng-template>
+        </md-tab>
+        <md-tab disabled="true">
+            <ng-template md-tab-label><md-icon class="right-display-material-icons">place</md-icon></ng-template>
+        </md-tab>
+    </md-tab-group>
+</div>

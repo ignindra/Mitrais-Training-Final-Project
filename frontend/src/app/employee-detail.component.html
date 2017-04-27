@@ -1,0 +1,87 @@
+<div class="right-display-top">
+    <form
+        [formGroup]="form"
+        class="emp-form">
+        <table class="emp-form-table" cellspacing="0">
+            <tr>
+                <td><md-input-container>
+                    <input mdInput placeholder="First name" size="35" name="firstname" formControlName="firstname">
+                    <div *ngIf="form.controls.firstname.errors?.pattern" class="error-message">First name has invalid characters</div>
+                </md-input-container></td>
+                <td><md-input-container>
+                    <input mdInput placeholder="Sub Division" size="35" name="subdivision" formControlName="subdivision">
+                    <div *ngIf="form.controls.subdivision.errors?.pattern" class="error-message">Sub division has invalid characters</div>
+                </md-input-container></td>
+            </tr>
+            <tr>
+                <td><md-input-container>
+                    <input mdInput placeholder="Last name" size="35" name="lastname" formControlName="lastname">
+                    <div *ngIf="form.controls.lastname.errors?.pattern" class="error-message">Last name has invalid characters</div>
+                </md-input-container></td>
+                <td><md-input-container>
+                    <input mdInput placeholder="Status" size="35" name="status" formControlName="status">
+                    <div *ngIf="form.controls.status.errors?.pattern" class="error-message">Status has invalid characters</div>
+                </md-input-container></td>
+            </tr>
+            <tr>
+                <td><md-select placeholder="Gender" name="gender" formControlName="gender">
+                    <md-option *ngFor="let gd of lookupLists.gender" value="{{gd}}">{{gd}}</md-option>
+                </md-select></td>
+                <td><md-input-container>
+                    <input mdTooltip="Date format: dd-mm-yyyy" mdInput placeholder="Suspend Date" size="35" name="suspenddate" formControlName="suspenddate">
+                    <div *ngIf="form.controls.suspenddate.errors?.pattern" class="error-message">Wrong date format</div>
+                </md-input-container></td>
+            </tr>
+            <tr>
+                <td><md-input-container>
+                    <input mdTooltip="Date format: dd-mm-yyyy" mdInput placeholder="Date of Birth" size="35" name="birthdate" formControlName="birthdate">
+                    <div *ngIf="form.controls.birthdate.errors?.pattern" class="error-message">Wrong date format</div>
+                </md-input-container></td>
+                <td><md-input-container>
+                    <input mdTooltip="Date format: dd-mm-yyyy" mdInput placeholder="Hired Date" size="35" name="hireddate" formControlName="hireddate">
+                    <div *ngIf="form.controls.hireddate.errors?.pattern" class="error-message">Wrong date format</div>
+                </md-input-container></td>
+            </tr>
+            <tr>
+                <td><md-input-container>
+                    <input mdInput placeholder="Nationality" size="35" name="nationality" formControlName="nationality">
+                    <div *ngIf="form.controls.nationality.errors?.pattern" class="error-message">Nationality has invalid characters</div>
+                </md-input-container></td>
+                <td><md-select placeholder="Grade" [(ngModel)]="selectedGrade" name="grade" formControlName="grade">
+                    <md-option *ngFor="let grade of grades" [value]="grade.gradename">{{grade.gradename}}</md-option>
+                </md-select></td>
+            </tr>
+            <tr>
+                <td><md-input-container>
+                    <input mdInput placeholder="Marital Status" size="35" name="maritalstatus" formControlName="maritalstatus">
+                    <div *ngIf="form.controls.maritalstatus.errors?.pattern" class="error-message">Marital status has invalid characters</div>
+                </md-input-container></td>
+                <td><md-select placeholder="Division" [(ngModel)]="selectedDivision" name="division" formControlName="division">
+                    <md-option *ngFor="let division of divisions" [value]="division.divisionname">{{division.divisionname}}</md-option>
+                </md-select></td>
+            </tr>
+            <tr>
+                <td><md-input-container>
+                    <input mdInput placeholder="Phone" size="35" name="phone" formControlName="phone">
+                    <div *ngIf="form.controls.phone.errors?.pattern" class="error-message">Wrong phone number format</div>
+                </md-input-container></td>
+                <td><md-input-container>
+                    <input mdInput placeholder="Email" size="35" name="email" formControlName="email">
+                </md-input-container></td>
+            </tr>
+            <tr>
+                <td><md-select placeholder="Location" [(ngModel)]="selectedLocation" name="location" formControlName="location">
+                    <md-option *ngFor="let location of locations" [value]="location.locationname">{{location.locationname}}</md-option>
+                </md-select></td>
+            </tr>
+        </table>
+    </form>
+    <div class="emp-image">
+        <div class="emp-image-place"><md-icon class="emp-image-material-icons">add_a_photo</md-icon></div>
+    </div>
+</div>
+<div class="right-display-bottom">
+    <button md-raised-button color="primary" class="emp-button" (click)="saveData(form.value)" [disabled]="!form.valid">Save Data</button>
+    <button md-raised-button color="" class="emp-button" (click)="cancelData()">Cancel</button>
+    <button md-raised-button color="warn" class="emp-button" [disabled]="delButton" (click)="openDialog(form.value)">Delete Employee</button>
+</div>

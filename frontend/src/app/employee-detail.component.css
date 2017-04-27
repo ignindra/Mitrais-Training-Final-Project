@@ -1,0 +1,76 @@
+.right-display-top {
+    box-sizing: border-box;
+    overflow: hidden;
+    height: 480px;
+    width: 100%;
+}
+
+.emp-form {
+    float: left;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100%;
+    width: 80%;
+    padding: 10px 0px 0px 20px;
+}
+
+.emp-form-table {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.emp-image {
+    float: left;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100%;
+    width: 20%;
+    padding-top: 20px;
+}
+
+.emp-image-place {
+    display: inline-block;
+    position: relative;
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-image: url('../media/avatar.jpg');
+}
+
+.emp-image-material-icons {
+    position: absolute;
+    top: 7px;
+    left: 124px;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.right-display-bottom {
+    box-sizing: border-box;
+    height: 40px;
+    width: 100%;
+    padding-top: 2px;
+    direction: rtl;
+}
+
+.emp-button {
+    margin-left: 10px;
+}
+
+.error-message {
+  display: block;
+  position: absolute;
+  pointer-events: none;
+  top: 24px;
+  left: 0px;
+  padding: 5px;
+  border-radius: 3px;
+  font-size: 10px;
+  background: rgba(255, 40, 40, 0.7);
+  color: whitesmoke;
+  z-index: 1000;
+}

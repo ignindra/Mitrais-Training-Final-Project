@@ -1,0 +1,123 @@
+.toolbar-material-icons {
+    padding: 0px 10px 4px 10px;
+    font-size: 26px;
+    color: rgba(255, 255, 255, 1);
+}
+
+.toolbar-material-icons.person {
+    font-size: 32px;
+}
+
+.toolbar-login-status {
+    padding: 0px 10px;
+    margin: 0px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 1);
+    list-style-type: none;
+}
+
+.toolbar-spacer {
+    flex: 1 1 auto;
+}
+
+.left-display {
+    float: left;
+    position: relative;
+    box-sizing: border-box;
+    overflow: hidden;
+    height: 570px;
+    width: 30%;
+}
+
+.add-emp {
+    position: absolute;
+    top: 50%;
+    left: 82%;
+    z-index: 10;
+}
+
+.searchbar {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    height: 49px;
+    width: 100%;
+    padding: 5px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 1);
+    background-color: rgba(139, 100, 206, 1);
+}
+
+.searchbar-input {
+    flex: 1 1 auto;
+    border: 0px;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 1);
+    background-color: rgba(139, 100, 206, 1);
+}
+
+.seachbar-counter {
+    flex: 0 1 auto;
+    width: 30px;
+    padding: 2px 5px;
+    border-radius: 3px;
+    text-align: center;
+    font-size: 10px;
+    color: rgba(103, 58, 183, 1);
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.searchbar-material-icons {
+    flex: 0 1 auto;
+    padding: 0px 5px;
+    font-size: 24px;
+    color: rgba(255, 255, 255, 1);
+}
+
+.searchbar-material-icons.sort {
+    cursor: pointer;
+}
+
+.searchbar-material-icons.filter {
+    cursor: pointer;
+}
+
+.left-display-bottom {
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 90%;
+    width: 100%;
+}
+
+.emp-list {
+    padding-top: 0px;
+}
+
+.emp-selected {
+    background-color: rgba(188, 165, 229, 1);
+}
+
+.left-display-material-icons {
+    font-size: 30px;
+    color: rgba(139, 100, 206, 1);
+}
+
+md-divider {
+    border-top: 2px solid rgba(103, 58, 183, 0.3);
+}
+
+.right-display {
+    float: left;
+    box-sizing: border-box;
+    overflow: hidden;
+    height: 570px;
+    width: 70%;
+    border-left: 2px solid rgba(103, 58, 183, 0.3);
+}
+
+.right-display-material-icons {
+    padding-top: 10px;
+    font-size: 26px;
+    color: rgba(139, 100, 206, 1);
+}
