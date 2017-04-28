@@ -15,31 +15,32 @@ var AppFormService = (function () {
     function AppFormService(http) {
         this.http = http;
         this.headers = new http_1.Headers({ 'Content-Type': 'application/json' });
+        this.emappUrl = 'http://localhost:8090/emapp/';
     }
     AppFormService.prototype.handleError = function (error) {
         console.error('An error occurred', error);
         return Promise.reject(error.message || error);
     };
     AppFormService.prototype.getGrades = function () {
-        return this.http.get('http://localhost:8090/emapp/all/grade')
+        return this.http.get(this.emappUrl + 'all/grade')
             .toPromise()
             .then(function (response) { return response.json(); })
             .catch(this.handleError);
     };
     AppFormService.prototype.getDivisions = function () {
-        return this.http.get('http://localhost:8090/emapp/all/division')
+        return this.http.get(this.emappUrl + 'all/division')
             .toPromise()
             .then(function (response) { return response.json(); })
             .catch(this.handleError);
     };
     AppFormService.prototype.getLocations = function () {
-        return this.http.get('http://localhost:8090/emapp/all/location')
+        return this.http.get(this.emappUrl + 'all/location')
             .toPromise()
             .then(function (response) { return response.json(); })
             .catch(this.handleError);
     };
     AppFormService.prototype.uploadImage = function (formData) {
-        return this.http.post('http://localhost:8090/emapp/add/image', formData)
+        return this.http.post(this.emappUrl + 'add/image', formData)
             .toPromise()
             .then(function (response) { return response.text(); })
             .catch(this.handleError);

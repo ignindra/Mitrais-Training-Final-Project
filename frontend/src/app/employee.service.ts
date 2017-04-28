@@ -7,6 +7,7 @@ import { Employee } from './employee';
 @Injectable()
 export class EmployeeService {
     private headers = new Headers({'Content-Type': 'application/json'});
+    private emappUrl = 'http://localhost:8090/emapp/';
 
     constructor(private http: Http) { }
 
@@ -16,7 +17,7 @@ export class EmployeeService {
     }
 
     getEmployees(): Promise<Employee[]> {
-        return this.http.get('http://localhost:8090/emapp/all/employee')
+        return this.http.get(this.emappUrl+'all/employee')
             .toPromise()
             .then(response => response.json() as Employee[])
             .catch(this.handleError);
@@ -24,16 +25,15 @@ export class EmployeeService {
     
     addEmployee(emp: Employee): Promise<string> {
         return this.http
-            .post('http://localhost:8090/emapp/add/employee', JSON.stringify(emp), {headers: this.headers})
+            .post(this.emappUrl+'add/employee', JSON.stringify(emp), {headers: this.headers})
             .toPromise()
             .then(response => response.text())
             .catch(this.handleError);
     }
 
     updateEmployee(emp: Employee): Promise<string> {
-        console.log("!#@!#@!#@!@!"+emp.imgpath);
         return this.http
-            .put('http://localhost:8090/emapp/update/employee', JSON.stringify(emp), {headers: this.headers})
+            .put(this.emappUrl+'update/employee', JSON.stringify(emp), {headers: this.headers})
             .toPromise()
             .then(response => response.text())
             .catch(this.handleError);
@@ -41,7 +41,7 @@ export class EmployeeService {
 
     deleteEmployee(id: number): Promise<string> {
         return this.http
-            .delete('http://localhost:8090/emapp/del/employee/'+id, {headers: this.headers})
+            .delete(this.emappUrl+'del/employee/'+id, {headers: this.headers})
             .toPromise()
             .then(response => response.text())
             .catch(this.handleError);

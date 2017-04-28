@@ -51,6 +51,11 @@ public class MainController {
 
 	@DeleteMapping(path="/del/employee/{id}")
 	public @ResponseBody String deleteEmployee(@PathVariable String id) {
+		Employee tempEmp = employeeRepository.findOne(Integer.parseInt(id));
+		if (!tempEmp.getImgpath().equals("ph.jpg")) {}
+			File newFile = new File("./../frontend/src/media/"+tempEmp.getImgpath());
+			newFile.delete();
+		}
 		employeeRepository.delete(Integer.parseInt(id));
 		return "Deleted";
 	}
@@ -111,7 +116,11 @@ public class MainController {
 
 			String random = UUID.randomUUID().toString();
 			File newFile = new File("./../frontend/src/media/"+random+ext);
-			
+			while (newFile.exists()) {
+				random = UUID.randomUUID().toString();
+				newFile = new File("./../frontend/src/media/"+random+ext);
+			}
+
 			try {
 				newFile.createNewFile();
 				file.transferTo(newFile.getAbsoluteFile());

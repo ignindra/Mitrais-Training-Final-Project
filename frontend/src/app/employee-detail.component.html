@@ -77,11 +77,15 @@
         </table>
     </form>
     <div class="emp-image">
-        <img class="emp-image-place" src="{{selectedImage}}"/><!--<md-icon class="emp-image-material-icons">add_a_photo</md-icon>-->
+        <div class="emp-image-place" [ngStyle]="{'background-image': 'url(' + selectedImage + ')'}">
+            <label for="file-input">
+                <md-icon class="emp-image-material-icons">add_a_photo</md-icon>
+            </label>
+            <input id="file-input" type="file" (change)="fileChange($event)" accept=".png, .jpeg, .bmp, .jpg, .gif">
+        </div>
     </div>
 </div>
 <div class="right-display-bottom">
-    <input type="file" (change)="fileChange($event)" accept=".png, .jpeg, .bmp, .jpg, .gif">
     <button md-raised-button color="primary" class="emp-button" (click)="saveData(form.value)" [disabled]="!form.valid">Save Data</button>
     <button md-raised-button color="" class="emp-button" (click)="cancelData()">Cancel</button>
     <button md-raised-button color="warn" class="emp-button" [disabled]="delButton" (click)="openDialog(form.value)">Delete Employee</button>

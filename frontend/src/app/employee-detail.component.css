@@ -31,15 +31,17 @@
 }
 
 .emp-image-place {
-    /*display: inline-block;
-    position: relative;*/
+    position: relative;
     height: 150px;
     width: 150px;
     border-radius: 50%;
-    /*background-repeat: no-repeat;
+    background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
-    background-image: url('../media/1.jpg');*/
+}
+
+.emp-image-place > input {
+    display: none;
 }
 
 .emp-image-material-icons {
@@ -47,6 +49,7 @@
     top: 7px;
     left: 124px;
     background-color: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
 }
 
 .right-display-bottom {

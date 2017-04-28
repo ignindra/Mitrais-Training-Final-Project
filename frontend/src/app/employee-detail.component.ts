@@ -3,7 +3,6 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { RequestOptions, Headers, Http } from '@angular/http';
 import { MdDialog } from '@angular/material';
 import { DatePipe } from '@angular/common';
-import { Observable } from 'rxjs/Observable';
 
 import { Employee } from './employee';
 import { Grade } from './grade';
@@ -20,6 +19,7 @@ import { DeleteDialogComponent } from './delete-dialog.component';
     providers: [DatePipe]
 })
 export class EmployeeDetailComponent {
+    private mediaDir = '../media/';
     @Input() emp: any;
     @Output() save = new EventEmitter();
     @Output() updt = new EventEmitter();
@@ -46,7 +46,7 @@ export class EmployeeDetailComponent {
 
     ngOnInit(): void {
         this.fileList = null;
-        this.selectedImage = '../media/1.jpg';
+        this.selectedImage = this.mediaDir+'ph.jpg';
         this.appFormService.getGrades()
             .then(grades => this.grades = grades);
         this.appFormService.getDivisions()
@@ -116,6 +116,7 @@ export class EmployeeDetailComponent {
                 ])),
                 imgpath: this.formBuilder.control('')
             });
+            this.selectedImage = this.mediaDir+'ph.jpg';
             this.delButton = true;
         } else {
             this.form = this.formBuilder.group({
@@ -177,14 +178,24 @@ export class EmployeeDetailComponent {
                 ])),
                 imgpath: this.formBuilder.control('')
             });
-            this.selectedImage = this.emp.imgpath;
-            console.log(this.selectedImage, this.emp.imgpath);
+            this.selectedImage = this.mediaDir+this.emp.imgpath;
             this.delButton = false;
         }
     }
 
     fileChange(event: any) {
         this.fileList = event.target.files;
+        if (this.fileList.length > 0) {
+            let file: File = this.fileList[0];
+            let formData: FormData = new FormData();
+            formData.append('file', file, file.name);
+            this.appFormService.uploadImage(formData)
+                .then(response => {
+                    if (response !== 'fail') {
+                        this.selectedImage = this.mediaDir+response;
+                    }
+                });
+        }
     }
 
     openDialog(emp: Employee) {
@@ -213,34 +224,42 @@ export class EmployeeDetailComponent {
                 let formData: FormData = new FormData();
                 formData.append('file', file, file.name);
                 this.appFormService.uploadImage(formData)
-                    .then(response => { if (response !== 'fail') {emp.imgpath = '../media/'+response}});
+                    .then(response => {
+                        if (response !== 'fail') {
+                            emp.imgpath = response;
+                            this.save.emit(emp);
+                        }
+                    });
+            } else {
+                emp.imgpath = 'ph.jpg';
+                this.save.emit(emp);
             }
-            this.fileList = null;
-            this.save.emit(emp);
         } else {
             this.delButton = true;
             emp.birthdate = this.transformDate(emp.birthdate);
             emp.suspenddate = this.transformDate(emp.suspenddate);
             emp.hireddate = this.transformDate(emp.hireddate);
             if (this.fileList.length > 0) {
-                console.log("masukmasuk");
                 let file: File = this.fileList[0];
                 let formData: FormData = new FormData();
                 formData.append('file', file, file.name);
                 this.appFormService.uploadImage(formData)
-                    // .then(response => console.log(response));
-                    .then(response => { if (response !== 'fail') {
-                        emp.imgpath = '../media/'+response;
-                        console.log(emp.imgpath);
-                        this.fileList = null;
-                        this.updt.emit(emp);
-                    }});
+                    .then(response => {
+                        if (response !== 'fail') {
+                            emp.imgpath = response;
+                            this.updt.emit(emp);
+                        } else {
+                            emp.imgpath = 'ph.jpg';
+                            this.updt.emit(emp);
+                        }
+                    });
+            } else {
+                emp.imgpath = 'ph.jpg';
+                this.updt.emit(emp);
             }
-            console.log("asdfjaifoiawoawew"+emp.imgpath);
-            // this.fileList = null;
-            // this.updt.emit(emp);
-            console.log(this.selectedImage);
         }
+        this.selectedImage = this.mediaDir+'ph.jpg';
+        this.fileList = null;
         this.form.reset();
         this.status.emit();
     }

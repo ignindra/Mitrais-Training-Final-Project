@@ -27,6 +27,7 @@ var EmployeeDetailComponent = (function () {
         this.dialog = dialog;
         this.datePipe = datePipe;
         this.http = http;
+        this.mediaDir = '../media/';
         this.save = new core_1.EventEmitter();
         this.updt = new core_1.EventEmitter();
         this.del = new core_1.EventEmitter();
@@ -35,7 +36,7 @@ var EmployeeDetailComponent = (function () {
     EmployeeDetailComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.fileList = null;
-        this.selectedImage = '../media/1.jpg';
+        this.selectedImage = this.mediaDir + 'ph.jpg';
         this.appFormService.getGrades()
             .then(function (grades) { return _this.grades = grades; });
         this.appFormService.getDivisions()
@@ -104,6 +105,7 @@ var EmployeeDetailComponent = (function () {
                 ])),
                 imgpath: this.formBuilder.control('')
             });
+            this.selectedImage = this.mediaDir + 'ph.jpg';
             this.delButton = true;
         }
         else {
@@ -166,13 +168,24 @@ var EmployeeDetailComponent = (function () {
                 ])),
                 imgpath: this.formBuilder.control('')
             });
-            this.selectedImage = this.emp.imgpath;
-            console.log(this.selectedImage, this.emp.imgpath);
+            this.selectedImage = this.mediaDir + this.emp.imgpath;
             this.delButton = false;
         }
     };
     EmployeeDetailComponent.prototype.fileChange = function (event) {
+        var _this = this;
         this.fileList = event.target.files;
+        if (this.fileList.length > 0) {
+            var file = this.fileList[0];
+            var formData = new FormData();
+            formData.append('file', file, file.name);
+            this.appFormService.uploadImage(formData)
+                .then(function (response) {
+                if (response !== 'fail') {
+                    _this.selectedImage = _this.mediaDir + response;
+                }
+            });
+        }
     };
     EmployeeDetailComponent.prototype.openDialog = function (emp) {
         var _this = this;
@@ -199,12 +212,17 @@ var EmployeeDetailComponent = (function () {
                 var formData = new FormData();
                 formData.append('file', file, file.name);
                 this.appFormService.uploadImage(formData)
-                    .then(function (response) { if (response !== 'fail') {
-                    emp.imgpath = '../media/' + response;
-                } });
+                    .then(function (response) {
+                    if (response !== 'fail') {
+                        emp.imgpath = response;
+                        _this.save.emit(emp);
+                    }
+                });
             }
-            this.fileList = null;
-            this.save.emit(emp);
+            else {
+                emp.imgpath = 'ph.jpg';
+                this.save.emit(emp);
+            }
         }
         else {
             this.delButton = true;
@@ -212,25 +230,28 @@ var EmployeeDetailComponent = (function () {
             emp.suspenddate = this.transformDate(emp.suspenddate);
             emp.hireddate = this.transformDate(emp.hireddate);
             if (this.fileList.length > 0) {
-                console.log("masukmasuk");
                 var file = this.fileList[0];
                 var formData = new FormData();
                 formData.append('file', file, file.name);
                 this.appFormService.uploadImage(formData)
                     .then(function (response) {
                     if (response !== 'fail') {
-                        emp.imgpath = '../media/' + response;
-                        console.log(emp.imgpath);
-                        _this.fileList = null;
+                        emp.imgpath = response;
+                        _this.updt.emit(emp);
+                    }
+                    else {
+                        emp.imgpath = 'ph.jpg';
                         _this.updt.emit(emp);
                     }
                 });
             }
-            console.log("asdfjaifoiawoawew" + emp.imgpath);
-            // this.fileList = null;
-            // this.updt.emit(emp);
-            console.log(this.selectedImage);
+            else {
+                emp.imgpath = 'ph.jpg';
+                this.updt.emit(emp);
+            }
         }
+        this.selectedImage = this.mediaDir + 'ph.jpg';
+        this.fileList = null;
         this.form.reset();
         this.status.emit();
     };
