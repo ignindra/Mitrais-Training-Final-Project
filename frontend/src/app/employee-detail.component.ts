@@ -1,7 +1,9 @@
 import { Component, OnChanges, Input, Output, EventEmitter, SimpleChanges, Inject } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { RequestOptions, Headers, Http } from '@angular/http';
 import { MdDialog } from '@angular/material';
 import { DatePipe } from '@angular/common';
+import { Observable } from 'rxjs/Observable';
 
 import { Employee } from './employee';
 import { Grade } from './grade';
@@ -31,15 +33,20 @@ export class EmployeeDetailComponent {
     selectedDivision: Division;
     locations: Location[];
     selectedLocation: Location;
+    fileList: FileList;
+    selectedImage: string;
 
     constructor(
         @Inject(lookupListToken) public lookupLists: any,
         private formBuilder: FormBuilder,
         private appFormService: AppFormService,
         private dialog: MdDialog,
-        private datePipe: DatePipe) { }
+        private datePipe: DatePipe,
+        private http: Http) { }
 
     ngOnInit(): void {
+        this.fileList = null;
+        this.selectedImage = '../media/1.jpg';
         this.appFormService.getGrades()
             .then(grades => this.grades = grades);
         this.appFormService.getDivisions()
@@ -106,7 +113,8 @@ export class EmployeeDetailComponent {
                 ])),
                 location: this.formBuilder.control('', Validators.compose([
                     Validators.required
-                ]))
+                ])),
+                imgpath: this.formBuilder.control('')
             });
             this.delButton = true;
         } else {
@@ -166,17 +174,23 @@ export class EmployeeDetailComponent {
                 ])),
                 location: this.formBuilder.control(this.emp.location, Validators.compose([
                     Validators.required
-                ]))
+                ])),
+                imgpath: this.formBuilder.control('')
             });
+            this.selectedImage = this.emp.imgpath;
+            console.log(this.selectedImage, this.emp.imgpath);
             this.delButton = false;
         }
+    }
+
+    fileChange(event: any) {
+        this.fileList = event.target.files;
     }
 
     openDialog(emp: Employee) {
         let dialogRef = this.dialog.open(DeleteDialogComponent);
 
         dialogRef.afterClosed().subscribe(result => {
-            console.log(result);
             if (result === "yes") {
                 this.deleteData(emp);
             }
@@ -194,13 +208,38 @@ export class EmployeeDetailComponent {
             emp.birthdate = this.transformDate(emp.birthdate);
             emp.suspenddate = this.transformDate(emp.suspenddate);
             emp.hireddate = this.transformDate(emp.hireddate);
+            if (this.fileList.length > 0) {
+                let file: File = this.fileList[0];
+                let formData: FormData = new FormData();
+                formData.append('file', file, file.name);
+                this.appFormService.uploadImage(formData)
+                    .then(response => { if (response !== 'fail') {emp.imgpath = '../media/'+response}});
+            }
+            this.fileList = null;
             this.save.emit(emp);
         } else {
             this.delButton = true;
             emp.birthdate = this.transformDate(emp.birthdate);
             emp.suspenddate = this.transformDate(emp.suspenddate);
             emp.hireddate = this.transformDate(emp.hireddate);
-            this.updt.emit(emp);
+            if (this.fileList.length > 0) {
+                console.log("masukmasuk");
+                let file: File = this.fileList[0];
+                let formData: FormData = new FormData();
+                formData.append('file', file, file.name);
+                this.appFormService.uploadImage(formData)
+                    // .then(response => console.log(response));
+                    .then(response => { if (response !== 'fail') {
+                        emp.imgpath = '../media/'+response;
+                        console.log(emp.imgpath);
+                        this.fileList = null;
+                        this.updt.emit(emp);
+                    }});
+            }
+            console.log("asdfjaifoiawoawew"+emp.imgpath);
+            // this.fileList = null;
+            // this.updt.emit(emp);
+            console.log(this.selectedImage);
         }
         this.form.reset();
         this.status.emit();

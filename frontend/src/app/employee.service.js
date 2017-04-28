@@ -34,6 +34,7 @@ var EmployeeService = (function () {
             .catch(this.handleError);
     };
     EmployeeService.prototype.updateEmployee = function (emp) {
+        console.log("!#@!#@!#@!@!" + emp.imgpath);
         return this.http
             .put('http://localhost:8090/emapp/update/employee', JSON.stringify(emp), { headers: this.headers })
             .toPromise()

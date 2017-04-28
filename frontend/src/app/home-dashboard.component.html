@@ -25,7 +25,7 @@
                 <md-list-item
                     [ngClass]="{'emp-selected':selectedList === emp.id}"
                     (click)="onSelectEmployee(emp)">
-                    <img md-list-avatar src="../media/avatar.jpg" alt="User">
+                    <img md-list-avatar src="../media/{{emp.imgpath}}" alt="User">
                     <p md-line>
                         <span><b>{{emp.firstname}} {{emp.lastname}}</b></span>
                         <span>| {{emp.hireddate | date:'dd MMMM yyyy'}}</span>

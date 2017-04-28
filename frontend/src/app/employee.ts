@@ -15,4 +15,5 @@ export class Employee {
      phone: string;
      email: string;
      location: string;
+     imgpath: string;
 }

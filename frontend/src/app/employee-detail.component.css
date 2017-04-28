@@ -31,15 +31,15 @@
 }
 
 .emp-image-place {
-    display: inline-block;
-    position: relative;
+    /*display: inline-block;
+    position: relative;*/
     height: 150px;
     width: 150px;
     border-radius: 50%;
-    background-repeat: no-repeat;
+    /*background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
-    background-image: url('../media/avatar.jpg');
+    background-image: url('../media/1.jpg');*/
 }
 
 .emp-image-material-icons {
@@ -54,6 +54,7 @@
     height: 40px;
     width: 100%;
     padding-top: 2px;
+    padding-right: 10px;
     direction: rtl;
 }
 

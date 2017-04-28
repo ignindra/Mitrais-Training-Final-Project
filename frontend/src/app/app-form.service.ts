@@ -37,4 +37,11 @@ export class AppFormService {
             .then(response => response.json() as Location[])
             .catch(this.handleError);
     }
+
+    uploadImage(formData: FormData): Promise<string> {
+        return this.http.post('http://localhost:8090/emapp/add/image', formData)
+            .toPromise()
+            .then(response => response.text())
+            .catch(this.handleError);
+    }
 }

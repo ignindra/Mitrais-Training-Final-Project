@@ -1,15 +1,21 @@
 package com.backserv;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.backserv.Employee;
 import com.backserv.EmployeeRepository;
@@ -67,6 +73,7 @@ public class MainController {
 		tempEmp.setPhone(emp.getPhone());
 		tempEmp.setEmail(emp.getEmail());
 		tempEmp.setLocation(emp.getLocation());
+		tempEmp.setImgpath(emp.getImgpath());
 		employeeRepository.save(tempEmp);
 		return "Updated";
 	}
@@ -84,5 +91,36 @@ public class MainController {
 	@GetMapping(path="/all/location")
 	public @ResponseBody Iterable<Location> getAllLocations() {
 		return locationRepository.findAll();
+	}
+
+	@PostMapping(path="/add/image")
+	public @ResponseBody String fileUpload(@RequestParam("file") MultipartFile file) {
+		String fileType = file.getContentType();
+
+		if (fileType.equals("image/gif") || fileType.equals("image/png") || fileType.equals("image/jpeg") || fileType.equals("image/bmp")) {
+			String ext = "";
+			if (fileType.contains("gif")) {
+				ext = ".gif";
+			} else if (fileType.contains("png")) {
+				ext = ".png";
+			} else if (fileType.contains("jpeg")) {
+				ext = ".jpg";
+			} else if (fileType.contains("bmp")) {
+				ext = ".bmp";
+			}
+
+			String random = UUID.randomUUID().toString();
+			File newFile = new File("./../frontend/src/media/"+random+ext);
+			
+			try {
+				newFile.createNewFile();
+				file.transferTo(newFile.getAbsoluteFile());
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+			return random+ext;
+		} else {
+			return "fail";
+		}
 	}
 }

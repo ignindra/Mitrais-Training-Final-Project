@@ -38,6 +38,12 @@ var AppFormService = (function () {
             .then(function (response) { return response.json(); })
             .catch(this.handleError);
     };
+    AppFormService.prototype.uploadImage = function (formData) {
+        return this.http.post('http://localhost:8090/emapp/add/image', formData)
+            .toPromise()
+            .then(function (response) { return response.text(); })
+            .catch(this.handleError);
+    };
     return AppFormService;
 }());
 AppFormService = __decorate([

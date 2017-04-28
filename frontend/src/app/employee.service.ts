@@ -31,6 +31,7 @@ export class EmployeeService {
     }
 
     updateEmployee(emp: Employee): Promise<string> {
+        console.log("!#@!#@!#@!@!"+emp.imgpath);
         return this.http
             .put('http://localhost:8090/emapp/update/employee', JSON.stringify(emp), {headers: this.headers})
             .toPromise()

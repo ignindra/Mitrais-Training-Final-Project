@@ -13,18 +13,20 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 var core_1 = require("@angular/core");
 var forms_1 = require("@angular/forms");
+var http_1 = require("@angular/http");
 var material_1 = require("@angular/material");
 var common_1 = require("@angular/common");
 var app_form_service_1 = require("./app-form.service");
 var providers_1 = require("./providers");
 var delete_dialog_component_1 = require("./delete-dialog.component");
 var EmployeeDetailComponent = (function () {
-    function EmployeeDetailComponent(lookupLists, formBuilder, appFormService, dialog, datePipe) {
+    function EmployeeDetailComponent(lookupLists, formBuilder, appFormService, dialog, datePipe, http) {
         this.lookupLists = lookupLists;
         this.formBuilder = formBuilder;
         this.appFormService = appFormService;
         this.dialog = dialog;
         this.datePipe = datePipe;
+        this.http = http;
         this.save = new core_1.EventEmitter();
         this.updt = new core_1.EventEmitter();
         this.del = new core_1.EventEmitter();
@@ -32,6 +34,8 @@ var EmployeeDetailComponent = (function () {
     }
     EmployeeDetailComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.fileList = null;
+        this.selectedImage = '../media/1.jpg';
         this.appFormService.getGrades()
             .then(function (grades) { return _this.grades = grades; });
         this.appFormService.getDivisions()
@@ -97,7 +101,8 @@ var EmployeeDetailComponent = (function () {
                 ])),
                 location: this.formBuilder.control('', forms_1.Validators.compose([
                     forms_1.Validators.required
-                ]))
+                ])),
+                imgpath: this.formBuilder.control('')
             });
             this.delButton = true;
         }
@@ -158,16 +163,21 @@ var EmployeeDetailComponent = (function () {
                 ])),
                 location: this.formBuilder.control(this.emp.location, forms_1.Validators.compose([
                     forms_1.Validators.required
-                ]))
+                ])),
+                imgpath: this.formBuilder.control('')
             });
+            this.selectedImage = this.emp.imgpath;
+            console.log(this.selectedImage, this.emp.imgpath);
             this.delButton = false;
         }
+    };
+    EmployeeDetailComponent.prototype.fileChange = function (event) {
+        this.fileList = event.target.files;
     };
     EmployeeDetailComponent.prototype.openDialog = function (emp) {
         var _this = this;
         var dialogRef = this.dialog.open(delete_dialog_component_1.DeleteDialogComponent);
         dialogRef.afterClosed().subscribe(function (result) {
-            console.log(result);
             if (result === "yes") {
                 _this.deleteData(emp);
             }
@@ -179,10 +189,21 @@ var EmployeeDetailComponent = (function () {
         return Date.parse(parsedNewDate);
     };
     EmployeeDetailComponent.prototype.saveData = function (emp) {
+        var _this = this;
         if (this.emp === 0) {
             emp.birthdate = this.transformDate(emp.birthdate);
             emp.suspenddate = this.transformDate(emp.suspenddate);
             emp.hireddate = this.transformDate(emp.hireddate);
+            if (this.fileList.length > 0) {
+                var file = this.fileList[0];
+                var formData = new FormData();
+                formData.append('file', file, file.name);
+                this.appFormService.uploadImage(formData)
+                    .then(function (response) { if (response !== 'fail') {
+                    emp.imgpath = '../media/' + response;
+                } });
+            }
+            this.fileList = null;
             this.save.emit(emp);
         }
         else {
@@ -190,7 +211,25 @@ var EmployeeDetailComponent = (function () {
             emp.birthdate = this.transformDate(emp.birthdate);
             emp.suspenddate = this.transformDate(emp.suspenddate);
             emp.hireddate = this.transformDate(emp.hireddate);
-            this.updt.emit(emp);
+            if (this.fileList.length > 0) {
+                console.log("masukmasuk");
+                var file = this.fileList[0];
+                var formData = new FormData();
+                formData.append('file', file, file.name);
+                this.appFormService.uploadImage(formData)
+                    .then(function (response) {
+                    if (response !== 'fail') {
+                        emp.imgpath = '../media/' + response;
+                        console.log(emp.imgpath);
+                        _this.fileList = null;
+                        _this.updt.emit(emp);
+                    }
+                });
+            }
+            console.log("asdfjaifoiawoawew" + emp.imgpath);
+            // this.fileList = null;
+            // this.updt.emit(emp);
+            console.log(this.selectedImage);
         }
         this.form.reset();
         this.status.emit();
@@ -239,7 +278,8 @@ EmployeeDetailComponent = __decorate([
     __metadata("design:paramtypes", [Object, forms_1.FormBuilder,
         app_form_service_1.AppFormService,
         material_1.MdDialog,
-        common_1.DatePipe])
+        common_1.DatePipe,
+        http_1.Http])
 ], EmployeeDetailComponent);
 exports.EmployeeDetailComponent = EmployeeDetailComponent;
 //# sourceMappingURL=employee-detail.component.js.map

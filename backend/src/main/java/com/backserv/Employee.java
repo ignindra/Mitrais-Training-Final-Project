@@ -25,6 +25,7 @@ public class Employee {
     private String phone;
     private String email;
     private String location;
+    private String imgpath;
 
     public Integer getId() {
         return id;
@@ -152,5 +153,13 @@ public class Employee {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getImgpath() {
+        return imgpath;
+    }
+
+    public void setImgpath(String imgpath) {
+        this.imgpath = imgpath;
     }
 }
