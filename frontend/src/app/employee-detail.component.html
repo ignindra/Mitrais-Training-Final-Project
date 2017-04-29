@@ -2,7 +2,7 @@
     <form
         [formGroup]="form"
         class="emp-form">
-        <table class="emp-form-table" cellspacing="0">
+        <table class="emp-form-table" cellspacing="1">
             <tr>
                 <td><md-input-container>
                     <input mdInput placeholder="First name" size="35" name="firstname" formControlName="firstname">
@@ -24,7 +24,7 @@
                 </md-input-container></td>
             </tr>
             <tr>
-                <td><md-select placeholder="Gender" name="gender" formControlName="gender">
+                <td><md-select placeholder="Gender" name="gender" formControlName="gender" style="width:318px;">
                     <md-option *ngFor="let gd of lookupLists.gender" value="{{gd}}">{{gd}}</md-option>
                 </md-select></td>
                 <td><md-input-container>
@@ -47,16 +47,15 @@
                     <input mdInput placeholder="Nationality" size="35" name="nationality" formControlName="nationality">
                     <div *ngIf="form.controls.nationality.errors?.pattern" class="error-message">Nationality has invalid characters</div>
                 </md-input-container></td>
-                <td><md-select placeholder="Grade" [(ngModel)]="selectedGrade" name="grade" formControlName="grade">
+                <td><md-select placeholder="Grade" [(ngModel)]="selectedGrade" name="grade" formControlName="grade" style="width:318px;">
                     <md-option *ngFor="let grade of grades" [value]="grade.gradename">{{grade.gradename}}</md-option>
                 </md-select></td>
             </tr>
             <tr>
-                <td><md-input-container>
-                    <input mdInput placeholder="Marital Status" size="35" name="maritalstatus" formControlName="maritalstatus">
-                    <div *ngIf="form.controls.maritalstatus.errors?.pattern" class="error-message">Marital status has invalid characters</div>
-                </md-input-container></td>
-                <td><md-select placeholder="Division" [(ngModel)]="selectedDivision" name="division" formControlName="division">
+                <td><md-select placeholder="Marital Status" name="maritalstatus" formControlName="maritalstatus" style="width:318px;">
+                    <md-option *ngFor="let ms of lookupLists.maritalStatus" value="{{ms}}">{{ms}}</md-option>
+                </md-select></td>
+                <td><md-select placeholder="Division" [(ngModel)]="selectedDivision" name="division" formControlName="division" style="width:318px;">
                     <md-option *ngFor="let division of divisions" [value]="division.divisionname">{{division.divisionname}}</md-option>
                 </md-select></td>
             </tr>
@@ -70,7 +69,7 @@
                 </md-input-container></td>
             </tr>
             <tr>
-                <td><md-select placeholder="Location" [(ngModel)]="selectedLocation" name="location" formControlName="location">
+                <td><md-select placeholder="Location" [(ngModel)]="selectedLocation" name="location" formControlName="location" style="width:318px;">
                     <md-option *ngFor="let location of locations" [value]="location.id">{{location.locationname}}</md-option>
                 </md-select></td>
             </tr>

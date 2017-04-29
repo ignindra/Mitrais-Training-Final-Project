@@ -96,6 +96,14 @@
     padding-top: 0px;
 }
 
+.emp-not-found {
+    width:100%;
+    background-color: rgba(242, 242, 242, 1);
+    padding: 40px 0px;
+    text-align: center;
+    font-style: italic;
+}
+
 .emp-selected {
     background-color: rgba(161, 170, 222, 1);
 }

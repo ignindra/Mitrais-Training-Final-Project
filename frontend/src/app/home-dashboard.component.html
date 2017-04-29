@@ -21,6 +21,7 @@
     </div>
     <div class="left-display-bottom">
         <md-nav-list class="emp-list">
+            <div class="emp-not-found" *ngIf="employeesLength === 0">We cannot found the employee</div>
             <span *ngFor="let emp of employees">
                 <md-list-item
                     [ngClass]="{'emp-selected':selectedList === emp.id}"

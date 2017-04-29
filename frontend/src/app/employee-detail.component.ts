@@ -233,7 +233,7 @@ export class EmployeeDetailComponent {
                 id: emp.location,
                 locationname: this.findLocationName(emp.location)
             }
-            if (this.fileList) {
+            if (this.fileList.length > 0) {
                 let file: File = this.fileList[0];
                 let formData: FormData = new FormData();
                 formData.append('file', file, file.name);

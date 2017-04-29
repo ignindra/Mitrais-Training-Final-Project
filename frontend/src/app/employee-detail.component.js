@@ -220,7 +220,7 @@ var EmployeeDetailComponent = (function () {
                 id: emp.location,
                 locationname: this.findLocationName(emp.location)
             };
-            if (this.fileList) {
+            if (this.fileList.length > 0) {
                 var file = this.fileList[0];
                 var formData = new FormData();
                 formData.append('file', file, file.name);
