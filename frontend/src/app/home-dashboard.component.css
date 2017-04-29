@@ -25,7 +25,7 @@
     position: relative;
     box-sizing: border-box;
     overflow: hidden;
-    height: 570px;
+    height: 600px;
     width: 30%;
 }
 
@@ -34,6 +34,8 @@
     top: 50%;
     left: 82%;
     z-index: 10;
+    color: black;
+    background-color: rgba(255, 215, 64, 1);
 }
 
 .searchbar {
@@ -45,7 +47,7 @@
     padding: 5px;
     font-size: 12px;
     color: rgba(255, 255, 255, 1);
-    background-color: rgba(139, 100, 206, 1);
+    background-color: rgba(104, 119, 202, 1);
 }
 
 .searchbar-input {
@@ -53,7 +55,7 @@
     border: 0px;
     font-size: 15px;
     color: rgba(255, 255, 255, 1);
-    background-color: rgba(139, 100, 206, 1);
+    background-color: rgba(104, 119, 202, 1);
 }
 
 .seachbar-counter {
@@ -63,7 +65,7 @@
     border-radius: 3px;
     text-align: center;
     font-size: 10px;
-    color: rgba(103, 58, 183, 1);
+    color: rgba(66, 85, 189, 1);
     background-color: rgba(255, 255, 255, 1);
 }
 
@@ -86,7 +88,7 @@
     box-sizing: border-box;
     overflow-x: hidden;
     overflow-y: auto;
-    height: 90%;
+    height: 92%;
     width: 100%;
 }
 
@@ -95,29 +97,29 @@
 }
 
 .emp-selected {
-    background-color: rgba(188, 165, 229, 1);
+    background-color: rgba(161, 170, 222, 1);
 }
 
 .left-display-material-icons {
     font-size: 30px;
-    color: rgba(139, 100, 206, 1);
+    color: rgba(66, 85, 189, 1);
 }
 
 md-divider {
-    border-top: 2px solid rgba(103, 58, 183, 0.3);
+    border-top: 2px solid rgba(53, 68, 151, 0.3);
 }
 
 .right-display {
     float: left;
     box-sizing: border-box;
     overflow: hidden;
-    height: 570px;
+    height: 600px;
     width: 70%;
-    border-left: 2px solid rgba(103, 58, 183, 0.3);
+    border-left: 2px solid rgba(53, 68, 151, 0.3);
 }
 
 .right-display-material-icons {
     padding-top: 10px;
     font-size: 26px;
-    color: rgba(139, 100, 206, 1);
+    color: rgba(66, 85, 189, 1);
 }

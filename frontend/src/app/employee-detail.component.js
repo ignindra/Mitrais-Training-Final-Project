@@ -163,7 +163,7 @@ var EmployeeDetailComponent = (function () {
                 email: this.formBuilder.control(this.emp.email, forms_1.Validators.compose([
                     forms_1.Validators.required
                 ])),
-                location: this.formBuilder.control(this.emp.location, forms_1.Validators.compose([
+                location: this.formBuilder.control(this.emp.location.id, forms_1.Validators.compose([
                     forms_1.Validators.required
                 ])),
                 imgpath: this.formBuilder.control('')
@@ -196,6 +196,15 @@ var EmployeeDetailComponent = (function () {
             }
         });
     };
+    EmployeeDetailComponent.prototype.findLocationName = function (empId) {
+        var location;
+        for (location in this.locations) {
+            if (location.id === empId) {
+                return location.locationname;
+            }
+        }
+        return 'Unknown';
+    };
     EmployeeDetailComponent.prototype.transformDate = function (date) {
         var stringDate = date.trim().split('-');
         var parsedNewDate = new Date(parseInt(stringDate[2]), parseInt(stringDate[1]) - 1, parseInt(stringDate[0])).toISOString();
@@ -207,7 +216,11 @@ var EmployeeDetailComponent = (function () {
             emp.birthdate = this.transformDate(emp.birthdate);
             emp.suspenddate = this.transformDate(emp.suspenddate);
             emp.hireddate = this.transformDate(emp.hireddate);
-            if (this.fileList.length > 0) {
+            emp.location = {
+                id: emp.location,
+                locationname: this.findLocationName(emp.location)
+            };
+            if (this.fileList) {
                 var file = this.fileList[0];
                 var formData = new FormData();
                 formData.append('file', file, file.name);

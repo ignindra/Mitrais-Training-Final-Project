@@ -38,6 +38,14 @@ public class MainController {
 	@Autowired
 	private LocationRepository locationRepository;
 
+	// @PostMapping(path="/add/employee")
+	// public @ResponseBody String addNewEmployee (@RequestBody Employee emp) {
+	// 	Location tempLocation = locationRepository.findOne(emp.location.id);
+
+	// 	employeeRepository.save(emp);
+	// 	return "Saved";
+	// }
+
 	@PostMapping(path="/add/employee")
 	public @ResponseBody String addNewEmployee (@RequestBody Employee emp) {
 		employeeRepository.save(emp);
@@ -52,7 +60,7 @@ public class MainController {
 	@DeleteMapping(path="/del/employee/{id}")
 	public @ResponseBody String deleteEmployee(@PathVariable String id) {
 		Employee tempEmp = employeeRepository.findOne(Integer.parseInt(id));
-		if (!tempEmp.getImgpath().equals("ph.jpg")) {}
+		if (!tempEmp.getImgpath().equals("ph.jpg")) {
 			File newFile = new File("./../frontend/src/media/"+tempEmp.getImgpath());
 			newFile.delete();
 		}

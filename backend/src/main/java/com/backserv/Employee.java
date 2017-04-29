@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
 
 @Entity
 public class Employee {
@@ -24,7 +26,8 @@ public class Employee {
     private String grade;
     private String phone;
     private String email;
-    private String location;
+    @ManyToOne
+    private Location location;
     private String imgpath;
 
     public Integer getId() {
@@ -147,11 +150,11 @@ public class Employee {
         this.email = email;
     }
 
-    public String getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 

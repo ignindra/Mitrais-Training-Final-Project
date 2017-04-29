@@ -14,6 +14,6 @@ export class Employee {
      grade: string;
      phone: string;
      email: string;
-     location: string;
+     location: {id: number, locationname: string};
      imgpath: string;
 }

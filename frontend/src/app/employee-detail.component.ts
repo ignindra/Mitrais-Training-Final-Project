@@ -173,7 +173,7 @@ export class EmployeeDetailComponent {
                 email: this.formBuilder.control(this.emp.email, Validators.compose([
                     Validators.required
                 ])),
-                location: this.formBuilder.control(this.emp.location, Validators.compose([
+                location: this.formBuilder.control(this.emp.location.id, Validators.compose([
                     Validators.required
                 ])),
                 imgpath: this.formBuilder.control('')
@@ -208,6 +208,16 @@ export class EmployeeDetailComponent {
         })
     }
 
+    findLocationName(empId: number): string {
+        let location: any;
+        for (location in this.locations) {
+            if (location.id === empId) {
+                return location.locationname;
+            }
+        }
+        return 'Unknown';
+    }
+
     transformDate(date: any): number {
         let stringDate = date.trim().split('-');
         let parsedNewDate = new Date(parseInt(stringDate[2]), parseInt(stringDate[1])-1, parseInt(stringDate[0])).toISOString();
@@ -219,7 +229,11 @@ export class EmployeeDetailComponent {
             emp.birthdate = this.transformDate(emp.birthdate);
             emp.suspenddate = this.transformDate(emp.suspenddate);
             emp.hireddate = this.transformDate(emp.hireddate);
-            if (this.fileList.length > 0) {
+            emp.location = {
+                id: emp.location,
+                locationname: this.findLocationName(emp.location)
+            }
+            if (this.fileList) {
                 let file: File = this.fileList[0];
                 let formData: FormData = new FormData();
                 formData.append('file', file, file.name);
