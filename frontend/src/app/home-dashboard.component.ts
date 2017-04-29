@@ -109,7 +109,7 @@ export class HomeDashboardComponent implements OnInit {
                 this.employeeService.getEmployees()
                     .then(employees => this.employees = employees)
                     .then(() => this.employees = Object.assign([], this.employees)
-                    .filter(emp => emp.location === filterRes.location))
+                    .filter(emp => emp.location.locationname === filterRes.location))
                     .then(() => this.employeesLength = this.employees.length);
             } else if (filterRes.gender !== 'all' && filterRes.location === 'all') {
                 this.employeeService.getEmployees()
@@ -125,7 +125,7 @@ export class HomeDashboardComponent implements OnInit {
                 this.employeeService.getEmployees()
                     .then(employees => this.employees = employees)
                     .then(() => this.employees = Object.assign([], this.employees)
-                    .filter(emp => emp.gender === filterRes.gender && emp.location === filterRes.location))
+                    .filter(emp => emp.gender === filterRes.gender && emp.location.locationname === filterRes.location))
                     .then(() => this.employeesLength = this.employees.length);
             }
         }

@@ -102,7 +102,7 @@ var HomeDashboardComponent = (function () {
                 this.employeeService.getEmployees()
                     .then(function (employees) { return _this.employees = employees; })
                     .then(function () { return _this.employees = Object.assign([], _this.employees)
-                    .filter(function (emp) { return emp.location === filterRes.location; }); })
+                    .filter(function (emp) { return emp.location.locationname === filterRes.location; }); })
                     .then(function () { return _this.employeesLength = _this.employees.length; });
             }
             else if (filterRes.gender !== 'all' && filterRes.location === 'all') {
@@ -121,7 +121,7 @@ var HomeDashboardComponent = (function () {
                 this.employeeService.getEmployees()
                     .then(function (employees) { return _this.employees = employees; })
                     .then(function () { return _this.employees = Object.assign([], _this.employees)
-                    .filter(function (emp) { return emp.gender === filterRes.gender && emp.location === filterRes.location; }); })
+                    .filter(function (emp) { return emp.gender === filterRes.gender && emp.location.locationname === filterRes.location; }); })
                     .then(function () { return _this.employeesLength = _this.employees.length; });
             }
         }
