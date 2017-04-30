@@ -1,6 +1,5 @@
 import { Component, OnChanges, Input, Output, EventEmitter, SimpleChanges, Inject } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { RequestOptions, Headers, Http } from '@angular/http';
 import { MdDialog } from '@angular/material';
 import { DatePipe } from '@angular/common';
 
@@ -41,8 +40,7 @@ export class EmployeeDetailComponent {
         private formBuilder: FormBuilder,
         private appFormService: AppFormService,
         private dialog: MdDialog,
-        private datePipe: DatePipe,
-        private http: Http) { }
+        private datePipe: DatePipe) { }
 
     ngOnInit(): void {
         this.fileList = null;
@@ -72,7 +70,7 @@ export class EmployeeDetailComponent {
                 ])),
                 birthdate: this.formBuilder.control('', Validators.compose([
                     Validators.required,
-                    Validators.pattern('[0-9][0-9]\\-[0-9][0-9]\\-[1-2][0-9][0-9][0-9]')
+                    this.dateValidator
                 ])),
                 nationality: this.formBuilder.control('', Validators.compose([
                     Validators.required,
@@ -95,11 +93,11 @@ export class EmployeeDetailComponent {
                 ])),
                 suspenddate: this.formBuilder.control('', Validators.compose([
                     Validators.required,
-                    Validators.pattern('[0-9][0-9]\\-[0-9][0-9]\\-[1-2][0-9][0-9][0-9]')
+                    this.dateValidator
                 ])),
                 hireddate: this.formBuilder.control('', Validators.compose([
                     Validators.required,
-                    Validators.pattern('[0-9][0-9]\\-[0-9][0-9]\\-[1-2][0-9][0-9][0-9]')
+                    this.dateValidator
                 ])),
                 grade: this.formBuilder.control('', Validators.compose([
                     Validators.required
@@ -134,7 +132,7 @@ export class EmployeeDetailComponent {
                 ])),
                 birthdate: this.formBuilder.control(this.datePipe.transform(this.emp.birthdate, 'dd-MM-yyyy'), Validators.compose([
                     Validators.required,
-                    Validators.pattern('[0-9][0-9]\\-[0-9][0-9]\\-[1-2][0-9][0-9][0-9]')
+                    this.dateValidator
                 ])),
                 nationality: this.formBuilder.control(this.emp.nationality, Validators.compose([
                     Validators.required,
@@ -157,11 +155,11 @@ export class EmployeeDetailComponent {
                 ])),
                 suspenddate: this.formBuilder.control(this.datePipe.transform(this.emp.suspenddate, 'dd-MM-yyyy'), Validators.compose([
                     Validators.required,
-                    Validators.pattern('[0-9][0-9]\\-[0-9][0-9]\\-[1-2][0-9][0-9][0-9]')
+                    this.dateValidator
                 ])),
                 hireddate: this.formBuilder.control(this.datePipe.transform(this.emp.hireddate, 'dd-MM-yyyy'), Validators.compose([
                     Validators.required,
-                    Validators.pattern('[0-9][0-9]\\-[0-9][0-9]\\-[1-2][0-9][0-9][0-9]')
+                    this.dateValidator
                 ])),
                 grade: this.formBuilder.control(this.emp.grade, Validators.compose([
                     Validators.required
@@ -180,6 +178,38 @@ export class EmployeeDetailComponent {
             });
             this.selectedImage = this.mediaDir+this.emp.imgpath;
             this.delButton = false;
+        }
+    }
+
+    dateValidator(control: any) {
+        let oddMonths = [1, 3, 5, 7, 8, 10, 12];
+        let evenMonths = [4, 6, 9, 11];
+        let valid =  /^\d{1,2}\-\d{1,2}\-\d{4}$/.test(control.value.trim());
+        if (!valid) {
+            return {"validity":"Invalid date"};
+        } else {
+            let stringDate = control.value.trim().split('-');
+            if (((parseInt(stringDate[2]) % 4 == 0) && (parseInt(stringDate[2]) % 100 != 0)) || (parseInt(stringDate[2]) % 400 == 0)) {
+                if (parseInt(stringDate[1]) == 2 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 29) {
+                    return null;
+                } else if (oddMonths.indexOf(parseInt(stringDate[1])) > 0 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 31) {
+                    return null;
+                } else if (evenMonths.indexOf(parseInt(stringDate[1])) > 0 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 30) {
+                    return null;
+                } else {
+                    return {"validity":"Invalid date"};
+                }
+            } else {
+                if (parseInt(stringDate[1]) == 2 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 28) {
+                    return null;
+                } else if (oddMonths.indexOf(parseInt(stringDate[1])) > 0 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 31) {
+                    return null;
+                } else if (evenMonths.indexOf(parseInt(stringDate[1])) > 0 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 30) {
+                    return null;
+                } else {
+                    return {"validity":"Invalid date"};
+                }
+            }
         }
     }
 
@@ -220,7 +250,7 @@ export class EmployeeDetailComponent {
 
     transformDate(date: any): number {
         let stringDate = date.trim().split('-');
-        let parsedNewDate = new Date(parseInt(stringDate[2]), parseInt(stringDate[1])-1, parseInt(stringDate[0])).toISOString();
+        let parsedNewDate = new Date(parseInt(stringDate[2]), parseInt(stringDate[1])-1, parseInt(stringDate[0])+1).toISOString();
         return Date.parse(parsedNewDate);
     }
 
@@ -233,7 +263,7 @@ export class EmployeeDetailComponent {
                 id: emp.location,
                 locationname: this.findLocationName(emp.location)
             }
-            if (this.fileList.length > 0) {
+            if (this.fileList) {
                 let file: File = this.fileList[0];
                 let formData: FormData = new FormData();
                 formData.append('file', file, file.name);
@@ -253,7 +283,11 @@ export class EmployeeDetailComponent {
             emp.birthdate = this.transformDate(emp.birthdate);
             emp.suspenddate = this.transformDate(emp.suspenddate);
             emp.hireddate = this.transformDate(emp.hireddate);
-            if (this.fileList.length > 0) {
+            emp.location = {
+                id: emp.location,
+                locationname: this.findLocationName(emp.location)
+            }
+            if (this.fileList) {
                 let file: File = this.fileList[0];
                 let formData: FormData = new FormData();
                 formData.append('file', file, file.name);
@@ -268,26 +302,30 @@ export class EmployeeDetailComponent {
                         }
                     });
             } else {
-                emp.imgpath = 'ph.jpg';
+                if (this.emp.imgpath !== 'ph.jpg') {
+                    emp.imgpath = this.emp.imgpath;
+                } else {
+                    emp.imgpath = 'ph.jpg';
+                }
                 this.updt.emit(emp);
             }
         }
-        this.selectedImage = this.mediaDir+'ph.jpg';
         this.fileList = null;
-        this.form.reset();
+        this.selectedImage = this.mediaDir+'ph.jpg';
+        this.form.reset({birthdate: '01-01-1970', suspenddate: '01-01-1970', hireddate: '01-01-1970'});
         this.status.emit();
     }
 
     cancelData() {
         this.delButton = true;
-        this.form.reset();
+        this.form.reset({birthdate: '01-01-1970', suspenddate: '01-01-1970', hireddate: '01-01-1970'});
         this.status.emit();
     }
 
     deleteData(emp: Employee) {
         this.delButton = true;
         this.del.emit(emp.id);
-        this.form.reset();
+        this.form.reset({birthdate: '01-01-1970', suspenddate: '01-01-1970', hireddate: '01-01-1970'});
         this.status.emit();
     }
 }

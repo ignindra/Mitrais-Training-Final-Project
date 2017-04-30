@@ -13,20 +13,18 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 var core_1 = require("@angular/core");
 var forms_1 = require("@angular/forms");
-var http_1 = require("@angular/http");
 var material_1 = require("@angular/material");
 var common_1 = require("@angular/common");
 var app_form_service_1 = require("./app-form.service");
 var providers_1 = require("./providers");
 var delete_dialog_component_1 = require("./delete-dialog.component");
 var EmployeeDetailComponent = (function () {
-    function EmployeeDetailComponent(lookupLists, formBuilder, appFormService, dialog, datePipe, http) {
+    function EmployeeDetailComponent(lookupLists, formBuilder, appFormService, dialog, datePipe) {
         this.lookupLists = lookupLists;
         this.formBuilder = formBuilder;
         this.appFormService = appFormService;
         this.dialog = dialog;
         this.datePipe = datePipe;
-        this.http = http;
         this.mediaDir = '../media/';
         this.save = new core_1.EventEmitter();
         this.updt = new core_1.EventEmitter();
@@ -61,7 +59,7 @@ var EmployeeDetailComponent = (function () {
                 ])),
                 birthdate: this.formBuilder.control('', forms_1.Validators.compose([
                     forms_1.Validators.required,
-                    forms_1.Validators.pattern('[0-9][0-9]\\-[0-9][0-9]\\-[1-2][0-9][0-9][0-9]')
+                    this.dateValidator
                 ])),
                 nationality: this.formBuilder.control('', forms_1.Validators.compose([
                     forms_1.Validators.required,
@@ -84,11 +82,11 @@ var EmployeeDetailComponent = (function () {
                 ])),
                 suspenddate: this.formBuilder.control('', forms_1.Validators.compose([
                     forms_1.Validators.required,
-                    forms_1.Validators.pattern('[0-9][0-9]\\-[0-9][0-9]\\-[1-2][0-9][0-9][0-9]')
+                    this.dateValidator
                 ])),
                 hireddate: this.formBuilder.control('', forms_1.Validators.compose([
                     forms_1.Validators.required,
-                    forms_1.Validators.pattern('[0-9][0-9]\\-[0-9][0-9]\\-[1-2][0-9][0-9][0-9]')
+                    this.dateValidator
                 ])),
                 grade: this.formBuilder.control('', forms_1.Validators.compose([
                     forms_1.Validators.required
@@ -124,7 +122,7 @@ var EmployeeDetailComponent = (function () {
                 ])),
                 birthdate: this.formBuilder.control(this.datePipe.transform(this.emp.birthdate, 'dd-MM-yyyy'), forms_1.Validators.compose([
                     forms_1.Validators.required,
-                    forms_1.Validators.pattern('[0-9][0-9]\\-[0-9][0-9]\\-[1-2][0-9][0-9][0-9]')
+                    this.dateValidator
                 ])),
                 nationality: this.formBuilder.control(this.emp.nationality, forms_1.Validators.compose([
                     forms_1.Validators.required,
@@ -147,11 +145,11 @@ var EmployeeDetailComponent = (function () {
                 ])),
                 suspenddate: this.formBuilder.control(this.datePipe.transform(this.emp.suspenddate, 'dd-MM-yyyy'), forms_1.Validators.compose([
                     forms_1.Validators.required,
-                    forms_1.Validators.pattern('[0-9][0-9]\\-[0-9][0-9]\\-[1-2][0-9][0-9][0-9]')
+                    this.dateValidator
                 ])),
                 hireddate: this.formBuilder.control(this.datePipe.transform(this.emp.hireddate, 'dd-MM-yyyy'), forms_1.Validators.compose([
                     forms_1.Validators.required,
-                    forms_1.Validators.pattern('[0-9][0-9]\\-[0-9][0-9]\\-[1-2][0-9][0-9][0-9]')
+                    this.dateValidator
                 ])),
                 grade: this.formBuilder.control(this.emp.grade, forms_1.Validators.compose([
                     forms_1.Validators.required
@@ -170,6 +168,45 @@ var EmployeeDetailComponent = (function () {
             });
             this.selectedImage = this.mediaDir + this.emp.imgpath;
             this.delButton = false;
+        }
+    };
+    EmployeeDetailComponent.prototype.dateValidator = function (control) {
+        var oddMonths = [1, 3, 5, 7, 8, 10, 12];
+        var evenMonths = [4, 6, 9, 11];
+        var valid = /^\d{1,2}\-\d{1,2}\-\d{4}$/.test(control.value.trim());
+        if (!valid) {
+            return { "validity": "Invalid date" };
+        }
+        else {
+            var stringDate = control.value.trim().split('-');
+            if (((parseInt(stringDate[2]) % 4 == 0) && (parseInt(stringDate[2]) % 100 != 0)) || (parseInt(stringDate[2]) % 400 == 0)) {
+                if (parseInt(stringDate[1]) == 2 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 29) {
+                    return null;
+                }
+                else if (oddMonths.indexOf(parseInt(stringDate[1])) > 0 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 31) {
+                    return null;
+                }
+                else if (evenMonths.indexOf(parseInt(stringDate[1])) > 0 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 30) {
+                    return null;
+                }
+                else {
+                    return { "validity": "Invalid date" };
+                }
+            }
+            else {
+                if (parseInt(stringDate[1]) == 2 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 28) {
+                    return null;
+                }
+                else if (oddMonths.indexOf(parseInt(stringDate[1])) > 0 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 31) {
+                    return null;
+                }
+                else if (evenMonths.indexOf(parseInt(stringDate[1])) > 0 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 30) {
+                    return null;
+                }
+                else {
+                    return { "validity": "Invalid date" };
+                }
+            }
         }
     };
     EmployeeDetailComponent.prototype.fileChange = function (event) {
@@ -207,7 +244,7 @@ var EmployeeDetailComponent = (function () {
     };
     EmployeeDetailComponent.prototype.transformDate = function (date) {
         var stringDate = date.trim().split('-');
-        var parsedNewDate = new Date(parseInt(stringDate[2]), parseInt(stringDate[1]) - 1, parseInt(stringDate[0])).toISOString();
+        var parsedNewDate = new Date(parseInt(stringDate[2]), parseInt(stringDate[1]) - 1, parseInt(stringDate[0]) + 1).toISOString();
         return Date.parse(parsedNewDate);
     };
     EmployeeDetailComponent.prototype.saveData = function (emp) {
@@ -220,7 +257,7 @@ var EmployeeDetailComponent = (function () {
                 id: emp.location,
                 locationname: this.findLocationName(emp.location)
             };
-            if (this.fileList.length > 0) {
+            if (this.fileList) {
                 var file = this.fileList[0];
                 var formData = new FormData();
                 formData.append('file', file, file.name);
@@ -242,7 +279,11 @@ var EmployeeDetailComponent = (function () {
             emp.birthdate = this.transformDate(emp.birthdate);
             emp.suspenddate = this.transformDate(emp.suspenddate);
             emp.hireddate = this.transformDate(emp.hireddate);
-            if (this.fileList.length > 0) {
+            emp.location = {
+                id: emp.location,
+                locationname: this.findLocationName(emp.location)
+            };
+            if (this.fileList) {
                 var file = this.fileList[0];
                 var formData = new FormData();
                 formData.append('file', file, file.name);
@@ -259,24 +300,29 @@ var EmployeeDetailComponent = (function () {
                 });
             }
             else {
-                emp.imgpath = 'ph.jpg';
+                if (this.emp.imgpath !== 'ph.jpg') {
+                    emp.imgpath = this.emp.imgpath;
+                }
+                else {
+                    emp.imgpath = 'ph.jpg';
+                }
                 this.updt.emit(emp);
             }
         }
-        this.selectedImage = this.mediaDir + 'ph.jpg';
         this.fileList = null;
-        this.form.reset();
+        this.selectedImage = this.mediaDir + 'ph.jpg';
+        this.form.reset({ birthdate: '01-01-1970', suspenddate: '01-01-1970', hireddate: '01-01-1970' });
         this.status.emit();
     };
     EmployeeDetailComponent.prototype.cancelData = function () {
         this.delButton = true;
-        this.form.reset();
+        this.form.reset({ birthdate: '01-01-1970', suspenddate: '01-01-1970', hireddate: '01-01-1970' });
         this.status.emit();
     };
     EmployeeDetailComponent.prototype.deleteData = function (emp) {
         this.delButton = true;
         this.del.emit(emp.id);
-        this.form.reset();
+        this.form.reset({ birthdate: '01-01-1970', suspenddate: '01-01-1970', hireddate: '01-01-1970' });
         this.status.emit();
     };
     return EmployeeDetailComponent;
@@ -312,8 +358,7 @@ EmployeeDetailComponent = __decorate([
     __metadata("design:paramtypes", [Object, forms_1.FormBuilder,
         app_form_service_1.AppFormService,
         material_1.MdDialog,
-        common_1.DatePipe,
-        http_1.Http])
+        common_1.DatePipe])
 ], EmployeeDetailComponent);
 exports.EmployeeDetailComponent = EmployeeDetailComponent;
 //# sourceMappingURL=employee-detail.component.js.map
