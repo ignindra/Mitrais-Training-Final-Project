@@ -183,10 +183,10 @@ var EmployeeDetailComponent = (function () {
                 if (parseInt(stringDate[1]) == 2 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 29) {
                     return null;
                 }
-                else if (oddMonths.indexOf(parseInt(stringDate[1])) > 0 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 31) {
+                else if (oddMonths.indexOf(parseInt(stringDate[1])) >= 0 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 31) {
                     return null;
                 }
-                else if (evenMonths.indexOf(parseInt(stringDate[1])) > 0 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 30) {
+                else if (evenMonths.indexOf(parseInt(stringDate[1])) >= 0 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 30) {
                     return null;
                 }
                 else {
@@ -197,10 +197,10 @@ var EmployeeDetailComponent = (function () {
                 if (parseInt(stringDate[1]) == 2 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 28) {
                     return null;
                 }
-                else if (oddMonths.indexOf(parseInt(stringDate[1])) > 0 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 31) {
+                else if (oddMonths.indexOf(parseInt(stringDate[1])) >= 0 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 31) {
                     return null;
                 }
-                else if (evenMonths.indexOf(parseInt(stringDate[1])) > 0 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 30) {
+                else if (evenMonths.indexOf(parseInt(stringDate[1])) >= 0 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 30) {
                     return null;
                 }
                 else {
