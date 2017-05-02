@@ -1,9 +1,11 @@
+## Description
 The front-end was made from scratch using Angular (ver. 4.0.2) quickstart package and on the back-end side, the Spring Framework.
 
+### Note
 Please install Gradle to build and use the back-end service.
 The back-end service configuration is currently set to use MySQL ver 5.x database.
 
-
+## How-to
 If you want to try to use the application, please follow this step:
 1) Start the database of your choice, currently this program is using MySQL.
 2) Edit the content of application.properties in the backend folder to match your database settings of your choice.
