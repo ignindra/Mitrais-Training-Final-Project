@@ -28,17 +28,17 @@
                     <md-option *ngFor="let gd of lookupLists.gender" value="{{gd}}">{{gd}}</md-option>
                 </md-select></td>
                 <td><md-input-container>
-                    <input mdTooltip="Date format: dd-mm-yyyy (e.g. 17-02-2012)" mdInput placeholder="Suspend Date" size="35" name="suspenddate" formControlName="suspenddate">
+                    <input mdTooltip="Date format: dd-mm-yyyy (e.g. 17-02-2012) or put a dash (-)" mdInput placeholder="Suspend Date" size="35" name="suspenddate" formControlName="suspenddate">
                     <div *ngIf="form.controls.suspenddate.touched && !form.controls.suspenddate.valid" class="error-message">Wrong date format</div>
                 </md-input-container></td>
             </tr>
             <tr>
                 <td><md-input-container>
-                    <input mdTooltip="Date format: dd-mm-yyyy (e.g. 17-02-2012)" mdInput placeholder="Date of Birth" size="35" name="birthdate" formControlName="birthdate">
+                    <input mdTooltip="Date format: dd-mm-yyyy (e.g. 17-02-2012) or put a dash (-)" mdInput placeholder="Date of Birth" size="35" name="birthdate" formControlName="birthdate">
                     <div *ngIf="form.controls.birthdate.touched && !form.controls.birthdate.valid" class="error-message">Wrong date format</div>
                 </md-input-container></td>
                 <td><md-input-container>
-                    <input mdTooltip="Date format: dd-mm-yyyy (e.g. 17-02-2012)" mdInput placeholder="Hired Date" size="35" name="hireddate" formControlName="hireddate">
+                    <input mdTooltip="Date format: dd-mm-yyyy (e.g. 17-02-2012) or put a dash (-)" mdInput placeholder="Hired Date" size="35" name="hireddate" formControlName="hireddate">
                     <div *ngIf="form.controls.hireddate.touched && !form.controls.hireddate.valid" class="error-message">Wrong date format</div>
                 </md-input-container></td>
             </tr>

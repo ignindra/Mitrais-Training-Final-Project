@@ -15,14 +15,14 @@ public class Employee {
     private String firstname;
     private String lastname;
     private String gender;
-    private Long birthdate;
+    private String birthdate;
     private String nationality;
     private String maritalstatus;
     private String division;
     private String subdivision;
     private String status;
-    private Long suspenddate;
-    private Long hireddate;
+    private String suspenddate;
+    private String hireddate;
     private String grade;
     private String phone;
     private String email;
@@ -62,11 +62,11 @@ public class Employee {
         this.gender = gender;
     }
 
-    public Long getBirthdate() {
+    public String getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthdate(Long birthdate) {
+    public void setBirthdate(String birthdate) {
         this.birthdate = birthdate;
     }
 
@@ -110,19 +110,19 @@ public class Employee {
         this.status = status;
     }
 
-    public Long getSuspenddate() {
+    public String getSuspenddate() {
         return suspenddate;
     }
 
-    public void setSuspenddate(Long suspenddate) {
+    public void setSuspenddate(String suspenddate) {
         this.suspenddate = suspenddate;
     }
 
-    public Long getHireddate() {
+    public String getHireddate() {
         return hireddate;
     }
 
-    public void setHireddate(Long hireddate) {
+    public void setHireddate(String hireddate) {
         this.hireddate = hireddate;
     }
 

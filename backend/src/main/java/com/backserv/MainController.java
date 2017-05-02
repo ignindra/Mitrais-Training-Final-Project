@@ -38,14 +38,6 @@ public class MainController {
 	@Autowired
 	private LocationRepository locationRepository;
 
-	// @PostMapping(path="/add/employee")
-	// public @ResponseBody String addNewEmployee (@RequestBody Employee emp) {
-	// 	Location tempLocation = locationRepository.findOne(emp.location.id);
-
-	// 	employeeRepository.save(emp);
-	// 	return "Saved";
-	// }
-
 	@PostMapping(path="/add/employee")
 	public @ResponseBody String addNewEmployee (@RequestBody Employee emp) {
 		employeeRepository.save(emp);

@@ -3,14 +3,14 @@ export class Employee {
      firstname: string;
      lastname: string;
      gender: string;
-     birthdate: number;
+     birthdate: string;
      nationality: string;
      maritalstatus: string;
      division: string;
      subdivision: string;
      status: string;
-     suspenddate: number;
-     hireddate: number;
+     suspenddate: string;
+     hireddate: string;
      grade: string;
      phone: string;
      email: string;

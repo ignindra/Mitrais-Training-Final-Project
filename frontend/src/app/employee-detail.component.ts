@@ -68,7 +68,7 @@ export class EmployeeDetailComponent {
                 gender: this.formBuilder.control('', Validators.compose([
                     Validators.required
                 ])),
-                birthdate: this.formBuilder.control('', Validators.compose([
+                birthdate: this.formBuilder.control('-', Validators.compose([
                     Validators.required,
                     this.dateValidator
                 ])),
@@ -91,10 +91,10 @@ export class EmployeeDetailComponent {
                     Validators.required,
                     Validators.pattern('[a-zA-Z\\-\\ ]+')
                 ])),
-                suspenddate: this.formBuilder.control('', Validators.compose([
+                suspenddate: this.formBuilder.control('-', Validators.compose([
                     this.dateValidator
                 ])),
-                hireddate: this.formBuilder.control('', Validators.compose([
+                hireddate: this.formBuilder.control('-', Validators.compose([
                     Validators.required,
                     this.dateValidator
                 ])),
@@ -129,7 +129,7 @@ export class EmployeeDetailComponent {
                 gender: this.formBuilder.control(this.emp.gender, Validators.compose([
                     Validators.required
                 ])),
-                birthdate: this.formBuilder.control(this.datePipe.transform(this.emp.birthdate, 'dd-MM-yyyy'), Validators.compose([
+                birthdate: this.formBuilder.control('-', Validators.compose([
                     Validators.required,
                     this.dateValidator
                 ])),
@@ -152,10 +152,10 @@ export class EmployeeDetailComponent {
                     Validators.required,
                     Validators.pattern('[a-zA-Z\\-\\ ]+')
                 ])),
-                suspenddate: this.formBuilder.control('', Validators.compose([
+                suspenddate: this.formBuilder.control('-', Validators.compose([
                     this.dateValidator
                 ])),
-                hireddate: this.formBuilder.control(this.datePipe.transform(this.emp.hireddate, 'dd-MM-yyyy'), Validators.compose([
+                hireddate: this.formBuilder.control('-', Validators.compose([
                     Validators.required,
                     this.dateValidator
                 ])),
@@ -174,13 +174,27 @@ export class EmployeeDetailComponent {
                 ])),
                 imgpath: this.formBuilder.control('')
             });
-            if (this.emp.suspenddate <= 0) {
-                this.form.controls['suspenddate'].setValue('-');
-            } else {
-                this.form.controls['suspenddate'].setValue(this.datePipe.transform(this.emp.suspenddate, 'dd-MM-yyyy'));
-            }
+            this.dateFiller();
             this.selectedImage = this.mediaDir+this.emp.imgpath;
             this.delButton = false;
+        }
+    }
+
+    dateFiller() {
+        if (this.emp.suspenddate === '-') {
+            this.form.controls['suspenddate'].setValue('-');
+        } else {
+            this.form.controls['suspenddate'].setValue(this.datePipe.transform(this.emp.suspenddate, 'dd-MM-yyyy'));
+        }
+        if (this.emp.birthdate === '-') {
+            this.form.controls['birthdate'].setValue('-');
+        } else {
+            this.form.controls['birthdate'].setValue(this.datePipe.transform(this.emp.birthdate, 'dd-MM-yyyy'));
+        }
+        if (this.emp.hireddate === '-') {
+            this.form.controls['hireddate'].setValue('-');
+        } else {
+            this.form.controls['hireddate'].setValue(this.datePipe.transform(this.emp.hireddate, 'dd-MM-yyyy'));
         }
     }
 
@@ -188,13 +202,17 @@ export class EmployeeDetailComponent {
         let oddMonths = [1, 3, 5, 7, 8, 10, 12];
         let evenMonths = [4, 6, 9, 11];
         let valid =  /^\d{1,2}\-\d{1,2}\-\d{4}$/.test(control.value.trim());
+
         if (!valid && control.value.trim() !== '-') {
             return {"validity":"Invalid date"};
         } else if (!valid && control.value.trim() === '-') {
             return null;
         } else {
             let stringDate = control.value.trim().split('-');
-            if (((parseInt(stringDate[2]) % 4 == 0) && (parseInt(stringDate[2]) % 100 != 0)) || (parseInt(stringDate[2]) % 400 == 0)) {
+            let leapYearCheck = ((parseInt(stringDate[2]) % 4 == 0) && (parseInt(stringDate[2]) % 100 != 0)) || (parseInt(stringDate[2]) % 400 == 0);
+            let yearCheck = (parseInt(stringDate[2]) >= 1900) && (parseInt(stringDate[2]) <= new Date().getFullYear());
+
+            if (leapYearCheck && yearCheck) {
                 if (parseInt(stringDate[1]) == 2 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 29) {
                     return null;
                 } else if (oddMonths.indexOf(parseInt(stringDate[1])) >= 0 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 31) {
@@ -204,7 +222,7 @@ export class EmployeeDetailComponent {
                 } else {
                     return {"validity":"Invalid date"};
                 }
-            } else {
+            } else if (!leapYearCheck && yearCheck) {
                 if (parseInt(stringDate[1]) == 2 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 28) {
                     return null;
                 } else if (oddMonths.indexOf(parseInt(stringDate[1])) >= 0 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 31) {
@@ -214,6 +232,8 @@ export class EmployeeDetailComponent {
                 } else {
                     return {"validity":"Invalid date"};
                 }
+            } else {
+                return {"validity":"Invalid date"};
             }
         }
     }
@@ -253,21 +273,28 @@ export class EmployeeDetailComponent {
         return 'Unknown';
     }
 
-    transformDate(date: any): number {
+    transformDate(date: any): string {
         let stringDate = date.trim().split('-');
-        let parsedNewDate = new Date(parseInt(stringDate[2]), parseInt(stringDate[1])-1, parseInt(stringDate[0])).toISOString();
-        return Date.parse(parsedNewDate);
+        return new Date(parseInt(stringDate[2]), parseInt(stringDate[1])-1, parseInt(stringDate[0])).toISOString();
     }
 
     saveData(emp: any) {
         if (this.emp === 0) {
-            emp.birthdate = this.transformDate(emp.birthdate);
-            if (emp.suspenddate === '-') {
-                emp.suspenddate = this.transformDate('01-01-1970');
+            if (emp.birthdate === '-' || emp.birthdate === '') {
+                emp.birthdate = '-';
+            } else {
+                emp.birthdate = this.transformDate(emp.birthdate);
+            }
+            if (emp.suspenddate === '-' || emp.suspenddate === '') {
+                emp.suspenddate = '-';
             } else {
                 emp.suspenddate = this.transformDate(emp.suspenddate);
             }
-            emp.hireddate = this.transformDate(emp.hireddate);
+            if (emp.hireddate === '-' || emp.hireddate === '') {
+                emp.hireddate = '-';
+            } else {
+                emp.hireddate = this.transformDate(emp.hireddate);
+            }
             emp.location = {
                 id: emp.location,
                 locationname: this.findLocationName(emp.location)
@@ -289,13 +316,21 @@ export class EmployeeDetailComponent {
             }
         } else {
             this.delButton = true;
-            emp.birthdate = this.transformDate(emp.birthdate);
-            if (emp.suspenddate === '-') {
-                emp.suspenddate = this.transformDate('01-01-1970');
+            if (emp.birthdate === '-' || emp.birthdate === '') {
+                emp.birthdate = '-';
+            } else {
+                emp.birthdate = this.transformDate(emp.birthdate);
+            }
+            if (emp.suspenddate === '-' || emp.suspenddate === '') {
+                emp.suspenddate = '-';
             } else {
                 emp.suspenddate = this.transformDate(emp.suspenddate);
             }
-            emp.hireddate = this.transformDate(emp.hireddate);
+            if (emp.hireddate === '-' || emp.hireddate === '') {
+                emp.hireddate = '-';
+            } else {
+                emp.hireddate = this.transformDate(emp.hireddate);
+            }
             emp.location = {
                 id: emp.location,
                 locationname: this.findLocationName(emp.location)
@@ -325,20 +360,20 @@ export class EmployeeDetailComponent {
         }
         this.fileList = null;
         this.selectedImage = this.mediaDir+'ph.jpg';
-        this.form.reset({birthdate: '01-01-1970', suspenddate: '01-01-1970', hireddate: '01-01-1970'});
+        this.form.reset({birthdate: '-', suspenddate: '-', hireddate: '-'});
         this.status.emit();
     }
 
     cancelData() {
         this.delButton = true;
-        this.form.reset({birthdate: '01-01-1970', suspenddate: '01-01-1970', hireddate: '01-01-1970'});
+        this.form.reset({birthdate: '-', suspenddate: '-', hireddate: '-'});
         this.status.emit();
     }
 
     deleteData(emp: Employee) {
         this.delButton = true;
         this.del.emit(emp.id);
-        this.form.reset({birthdate: '01-01-1970', suspenddate: '01-01-1970', hireddate: '01-01-1970'});
+        this.form.reset({birthdate: '-', suspenddate: '-', hireddate: '-'});
         this.status.emit();
     }
 }

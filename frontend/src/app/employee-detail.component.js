@@ -57,7 +57,7 @@ var EmployeeDetailComponent = (function () {
                 gender: this.formBuilder.control('', forms_1.Validators.compose([
                     forms_1.Validators.required
                 ])),
-                birthdate: this.formBuilder.control('', forms_1.Validators.compose([
+                birthdate: this.formBuilder.control('-', forms_1.Validators.compose([
                     forms_1.Validators.required,
                     this.dateValidator
                 ])),
@@ -80,10 +80,10 @@ var EmployeeDetailComponent = (function () {
                     forms_1.Validators.required,
                     forms_1.Validators.pattern('[a-zA-Z\\-\\ ]+')
                 ])),
-                suspenddate: this.formBuilder.control('', forms_1.Validators.compose([
+                suspenddate: this.formBuilder.control('-', forms_1.Validators.compose([
                     this.dateValidator
                 ])),
-                hireddate: this.formBuilder.control('', forms_1.Validators.compose([
+                hireddate: this.formBuilder.control('-', forms_1.Validators.compose([
                     forms_1.Validators.required,
                     this.dateValidator
                 ])),
@@ -119,7 +119,7 @@ var EmployeeDetailComponent = (function () {
                 gender: this.formBuilder.control(this.emp.gender, forms_1.Validators.compose([
                     forms_1.Validators.required
                 ])),
-                birthdate: this.formBuilder.control(this.datePipe.transform(this.emp.birthdate, 'dd-MM-yyyy'), forms_1.Validators.compose([
+                birthdate: this.formBuilder.control('-', forms_1.Validators.compose([
                     forms_1.Validators.required,
                     this.dateValidator
                 ])),
@@ -142,10 +142,10 @@ var EmployeeDetailComponent = (function () {
                     forms_1.Validators.required,
                     forms_1.Validators.pattern('[a-zA-Z\\-\\ ]+')
                 ])),
-                suspenddate: this.formBuilder.control('', forms_1.Validators.compose([
+                suspenddate: this.formBuilder.control('-', forms_1.Validators.compose([
                     this.dateValidator
                 ])),
-                hireddate: this.formBuilder.control(this.datePipe.transform(this.emp.hireddate, 'dd-MM-yyyy'), forms_1.Validators.compose([
+                hireddate: this.formBuilder.control('-', forms_1.Validators.compose([
                     forms_1.Validators.required,
                     this.dateValidator
                 ])),
@@ -164,14 +164,29 @@ var EmployeeDetailComponent = (function () {
                 ])),
                 imgpath: this.formBuilder.control('')
             });
-            if (this.emp.suspenddate <= 0) {
-                this.form.controls['suspenddate'].setValue('-');
-            }
-            else {
-                this.form.controls['suspenddate'].setValue(this.datePipe.transform(this.emp.suspenddate, 'dd-MM-yyyy'));
-            }
+            this.dateFiller();
             this.selectedImage = this.mediaDir + this.emp.imgpath;
             this.delButton = false;
+        }
+    };
+    EmployeeDetailComponent.prototype.dateFiller = function () {
+        if (this.emp.suspenddate === '-') {
+            this.form.controls['suspenddate'].setValue('-');
+        }
+        else {
+            this.form.controls['suspenddate'].setValue(this.datePipe.transform(this.emp.suspenddate, 'dd-MM-yyyy'));
+        }
+        if (this.emp.birthdate === '-') {
+            this.form.controls['birthdate'].setValue('-');
+        }
+        else {
+            this.form.controls['birthdate'].setValue(this.datePipe.transform(this.emp.birthdate, 'dd-MM-yyyy'));
+        }
+        if (this.emp.hireddate === '-') {
+            this.form.controls['hireddate'].setValue('-');
+        }
+        else {
+            this.form.controls['hireddate'].setValue(this.datePipe.transform(this.emp.hireddate, 'dd-MM-yyyy'));
         }
     };
     EmployeeDetailComponent.prototype.dateValidator = function (control) {
@@ -186,7 +201,9 @@ var EmployeeDetailComponent = (function () {
         }
         else {
             var stringDate = control.value.trim().split('-');
-            if (((parseInt(stringDate[2]) % 4 == 0) && (parseInt(stringDate[2]) % 100 != 0)) || (parseInt(stringDate[2]) % 400 == 0)) {
+            var leapYearCheck = ((parseInt(stringDate[2]) % 4 == 0) && (parseInt(stringDate[2]) % 100 != 0)) || (parseInt(stringDate[2]) % 400 == 0);
+            var yearCheck = (parseInt(stringDate[2]) >= 1900) && (parseInt(stringDate[2]) <= new Date().getFullYear());
+            if (leapYearCheck && yearCheck) {
                 if (parseInt(stringDate[1]) == 2 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 29) {
                     return null;
                 }
@@ -200,7 +217,7 @@ var EmployeeDetailComponent = (function () {
                     return { "validity": "Invalid date" };
                 }
             }
-            else {
+            else if (!leapYearCheck && yearCheck) {
                 if (parseInt(stringDate[1]) == 2 && parseInt(stringDate[0]) >= 1 && parseInt(stringDate[0]) <= 28) {
                     return null;
                 }
@@ -213,6 +230,9 @@ var EmployeeDetailComponent = (function () {
                 else {
                     return { "validity": "Invalid date" };
                 }
+            }
+            else {
+                return { "validity": "Invalid date" };
             }
         }
     };
@@ -251,20 +271,29 @@ var EmployeeDetailComponent = (function () {
     };
     EmployeeDetailComponent.prototype.transformDate = function (date) {
         var stringDate = date.trim().split('-');
-        var parsedNewDate = new Date(parseInt(stringDate[2]), parseInt(stringDate[1]) - 1, parseInt(stringDate[0])).toISOString();
-        return Date.parse(parsedNewDate);
+        return new Date(parseInt(stringDate[2]), parseInt(stringDate[1]) - 1, parseInt(stringDate[0])).toISOString();
     };
     EmployeeDetailComponent.prototype.saveData = function (emp) {
         var _this = this;
         if (this.emp === 0) {
-            emp.birthdate = this.transformDate(emp.birthdate);
-            if (emp.suspenddate === '-') {
-                emp.suspenddate = this.transformDate('01-01-1970');
+            if (emp.birthdate === '-' || emp.birthdate === '') {
+                emp.birthdate = '-';
+            }
+            else {
+                emp.birthdate = this.transformDate(emp.birthdate);
+            }
+            if (emp.suspenddate === '-' || emp.suspenddate === '') {
+                emp.suspenddate = '-';
             }
             else {
                 emp.suspenddate = this.transformDate(emp.suspenddate);
             }
-            emp.hireddate = this.transformDate(emp.hireddate);
+            if (emp.hireddate === '-' || emp.hireddate === '') {
+                emp.hireddate = '-';
+            }
+            else {
+                emp.hireddate = this.transformDate(emp.hireddate);
+            }
             emp.location = {
                 id: emp.location,
                 locationname: this.findLocationName(emp.location)
@@ -288,14 +317,24 @@ var EmployeeDetailComponent = (function () {
         }
         else {
             this.delButton = true;
-            emp.birthdate = this.transformDate(emp.birthdate);
-            if (emp.suspenddate === '-') {
-                emp.suspenddate = this.transformDate('01-01-1970');
+            if (emp.birthdate === '-' || emp.birthdate === '') {
+                emp.birthdate = '-';
+            }
+            else {
+                emp.birthdate = this.transformDate(emp.birthdate);
+            }
+            if (emp.suspenddate === '-' || emp.suspenddate === '') {
+                emp.suspenddate = '-';
             }
             else {
                 emp.suspenddate = this.transformDate(emp.suspenddate);
             }
-            emp.hireddate = this.transformDate(emp.hireddate);
+            if (emp.hireddate === '-' || emp.hireddate === '') {
+                emp.hireddate = '-';
+            }
+            else {
+                emp.hireddate = this.transformDate(emp.hireddate);
+            }
             emp.location = {
                 id: emp.location,
                 locationname: this.findLocationName(emp.location)
@@ -328,18 +367,18 @@ var EmployeeDetailComponent = (function () {
         }
         this.fileList = null;
         this.selectedImage = this.mediaDir + 'ph.jpg';
-        this.form.reset({ birthdate: '01-01-1970', suspenddate: '01-01-1970', hireddate: '01-01-1970' });
+        this.form.reset({ birthdate: '-', suspenddate: '-', hireddate: '-' });
         this.status.emit();
     };
     EmployeeDetailComponent.prototype.cancelData = function () {
         this.delButton = true;
-        this.form.reset({ birthdate: '01-01-1970', suspenddate: '01-01-1970', hireddate: '01-01-1970' });
+        this.form.reset({ birthdate: '-', suspenddate: '-', hireddate: '-' });
         this.status.emit();
     };
     EmployeeDetailComponent.prototype.deleteData = function (emp) {
         this.delButton = true;
         this.del.emit(emp.id);
-        this.form.reset({ birthdate: '01-01-1970', suspenddate: '01-01-1970', hireddate: '01-01-1970' });
+        this.form.reset({ birthdate: '-', suspenddate: '-', hireddate: '-' });
         this.status.emit();
     };
     return EmployeeDetailComponent;
