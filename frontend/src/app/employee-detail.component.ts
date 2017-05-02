@@ -92,7 +92,6 @@ export class EmployeeDetailComponent {
                     Validators.pattern('[a-zA-Z\\-\\ ]+')
                 ])),
                 suspenddate: this.formBuilder.control('', Validators.compose([
-                    Validators.required,
                     this.dateValidator
                 ])),
                 hireddate: this.formBuilder.control('', Validators.compose([
@@ -153,8 +152,7 @@ export class EmployeeDetailComponent {
                     Validators.required,
                     Validators.pattern('[a-zA-Z\\-\\ ]+')
                 ])),
-                suspenddate: this.formBuilder.control(this.datePipe.transform(this.emp.suspenddate, 'dd-MM-yyyy'), Validators.compose([
-                    Validators.required,
+                suspenddate: this.formBuilder.control('', Validators.compose([
                     this.dateValidator
                 ])),
                 hireddate: this.formBuilder.control(this.datePipe.transform(this.emp.hireddate, 'dd-MM-yyyy'), Validators.compose([
@@ -176,6 +174,11 @@ export class EmployeeDetailComponent {
                 ])),
                 imgpath: this.formBuilder.control('')
             });
+            if (this.emp.suspenddate <= 0) {
+                this.form.controls['suspenddate'].setValue('-');
+            } else {
+                this.form.controls['suspenddate'].setValue(this.datePipe.transform(this.emp.suspenddate, 'dd-MM-yyyy'));
+            }
             this.selectedImage = this.mediaDir+this.emp.imgpath;
             this.delButton = false;
         }
@@ -185,8 +188,10 @@ export class EmployeeDetailComponent {
         let oddMonths = [1, 3, 5, 7, 8, 10, 12];
         let evenMonths = [4, 6, 9, 11];
         let valid =  /^\d{1,2}\-\d{1,2}\-\d{4}$/.test(control.value.trim());
-        if (!valid) {
+        if (!valid && control.value.trim() !== '-') {
             return {"validity":"Invalid date"};
+        } else if (!valid && control.value.trim() === '-') {
+            return null;
         } else {
             let stringDate = control.value.trim().split('-');
             if (((parseInt(stringDate[2]) % 4 == 0) && (parseInt(stringDate[2]) % 100 != 0)) || (parseInt(stringDate[2]) % 400 == 0)) {
@@ -232,7 +237,7 @@ export class EmployeeDetailComponent {
         let dialogRef = this.dialog.open(DeleteDialogComponent);
 
         dialogRef.afterClosed().subscribe(result => {
-            if (result === "yes") {
+            if (result === 'yes') {
                 this.deleteData(emp);
             }
         })
@@ -250,14 +255,18 @@ export class EmployeeDetailComponent {
 
     transformDate(date: any): number {
         let stringDate = date.trim().split('-');
-        let parsedNewDate = new Date(parseInt(stringDate[2]), parseInt(stringDate[1])-1, parseInt(stringDate[0])+1).toISOString();
+        let parsedNewDate = new Date(parseInt(stringDate[2]), parseInt(stringDate[1])-1, parseInt(stringDate[0])).toISOString();
         return Date.parse(parsedNewDate);
     }
 
     saveData(emp: any) {
         if (this.emp === 0) {
             emp.birthdate = this.transformDate(emp.birthdate);
-            emp.suspenddate = this.transformDate(emp.suspenddate);
+            if (emp.suspenddate === '-') {
+                emp.suspenddate = this.transformDate('01-01-1970');
+            } else {
+                emp.suspenddate = this.transformDate(emp.suspenddate);
+            }
             emp.hireddate = this.transformDate(emp.hireddate);
             emp.location = {
                 id: emp.location,
@@ -281,7 +290,11 @@ export class EmployeeDetailComponent {
         } else {
             this.delButton = true;
             emp.birthdate = this.transformDate(emp.birthdate);
-            emp.suspenddate = this.transformDate(emp.suspenddate);
+            if (emp.suspenddate === '-') {
+                emp.suspenddate = this.transformDate('01-01-1970');
+            } else {
+                emp.suspenddate = this.transformDate(emp.suspenddate);
+            }
             emp.hireddate = this.transformDate(emp.hireddate);
             emp.location = {
                 id: emp.location,
